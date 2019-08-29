@@ -5,6 +5,7 @@ import * as VeeValidate from './veeValidate';
 import * as Multiselect from './multiselect';
 import * as VModal from './vueModal';
 import * as VueToast from './vueToastNotification';
+import * as VueStars from './vueStars';
 
 export default {
   Bootstrap,
@@ -14,4 +15,5 @@ export default {
   Multiselect,
   VModal,
   VueToast,
+  VueStars
 };

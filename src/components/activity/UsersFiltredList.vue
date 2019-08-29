@@ -23,7 +23,49 @@
           class="ml-4 fas fa-times mouse-type-pointer"
           @click="declineApplicant(row.item.id)"
         />
+  
+        <i
+          v-if="filter === '/users?filter[activityRole][]=2'"
+          class="fas fa-star-half-alt mouse-type-pointer"
+          
+          @click="$bvModal.show('bv-modal-example'), clicked = row.item.id"
+        />
+  
+        <b-modal v-if="clicked === row.item.id" id="bv-modal-example" ref="my-modal">
+          <template slot="modal-title">
+            Send your feedback for <b>{{ row.item.username }}</b>
+          </template>
+          <div class="d-block">
+            <b-form-group>
+              <label class="typo__label ml-3">Rate user:</label>
+  
+              <vue-stars v-model="feedback.stars" name="starsFeedback" :max="5" class="row ml-3">
+                <img slot="activeLabel" src="../../assets/images/error_bee.png" height="17" width="17">
+               
+                <span slot="inactiveLabel">🙁</span>
+              </vue-stars>
+              <label class="typo__label ml-3">Write your comment:</label>
         
+              <b-form-textarea
+                id="textarea"
+                v-model="feedback.comment"
+                placeholder="Enter your feedback..."
+                rows="3"
+                max-rows="6"
+              />
+            </b-form-group>
+          </div>
+          <template slot="modal-footer" slot-scope="{ ok, cancel }">
+            <b-button size="sm" variant="danger" @click="cancel()">
+              Cancel
+            </b-button>
+            
+            <b-button size="sm" variant="success" @click="setFeedback(row.item.id)">
+              Send
+            </b-button>
+          </template>
+        </b-modal>
+
         <i class="ml-4 fas fa-info-circle mouse-type-pointer" @click="row.toggleDetails"/>
       </template>
       
@@ -83,6 +125,7 @@
 
 <script>
   import ActivityService from '../../services/activityApi';
+  import feedbackMethods from "../../services/feedback";
 
   export default {
     data() {
@@ -103,6 +146,10 @@
             { stars: null }
           ]
         },
+        feedback:{
+          stars: null,
+          comment: ''
+        },
         filter: '/users',
         options:[
           {value: '/users', text:'All users are selected'},
@@ -111,7 +158,8 @@
           {value: '/users?filter[activityRole][]=2', text: 'Assigned users'},
           {value: '/users?filter[activityRole][]=3', text: 'Declined users'},
           {value: '/users?filter[activityRole][]=4', text: 'Rejected users'}
-        ]
+        ],
+        clicked: null
       }
     },
     mounted() {
@@ -175,6 +223,28 @@
           .catch(response => {
             this.$toast.open({
               message: response.message,
+              type: 'error',
+              position: 'top-right',
+              duration: 3000,
+              dismissible: true
+            })
+          })
+      },
+      setFeedback(userId){
+        feedbackMethods.sendFeedback(this.$route.params.idActivity, userId, this.feedback)
+          .then(() => {
+            this.$toast.open({
+              message: 'User successful declined',
+              type: 'success',
+              position: 'top-right',
+              duration: 3000,
+              dismissible: true
+            });
+            this.getUsersListByFilter()
+          })
+          .catch(response => {
+            this.$toast.open({
+              message: response.error.message,
               type: 'error',
               position: 'top-right',
               duration: 3000,

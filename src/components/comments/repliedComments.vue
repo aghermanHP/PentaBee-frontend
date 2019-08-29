@@ -116,6 +116,7 @@
               duration: 3000,
               dismissible: true
             });
+            this.sendReloadCommentsEvent()
           })
       }
     }

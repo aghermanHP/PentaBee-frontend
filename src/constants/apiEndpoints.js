@@ -7,4 +7,5 @@ export const userEndpoints = {
   REGISTER: `${basePath}/api/register`,
   ACTIVITIES: `${basePath}/api/activities`,
   TYPES: `${basePath}/api/activity-types`,
+  FEEDBACK: `${basePath}/api/feedback`
 };

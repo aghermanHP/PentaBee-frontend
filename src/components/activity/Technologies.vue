@@ -22,7 +22,7 @@
       prop: 'technologies',
       event: 'changeTechnologiesList'
     },
-    props: { technologies: Array },
+    props: { technologies: Array()},
     data() {
       return {
         formTechnologies: [],

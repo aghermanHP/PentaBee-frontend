@@ -22,7 +22,7 @@
       prop: 'types',
       event: 'changeTypesList'
     },
-    props: {types: Array},
+    props: {types: Array()},
     data() {
       return {
         formTypes: [],
